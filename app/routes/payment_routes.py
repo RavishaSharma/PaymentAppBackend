@@ -97,3 +97,20 @@ def delete_payment(payment_id):
         return jsonify({"message": "Payment deleted successfully"}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+@payment_routes.route("/api/users", methods=["GET"])
+def get_users():
+    try:
+        # Fetch all `_id` fields from the payments collection
+        user_ids = payments_collection.find({}, {"_id": 1})
+
+        # Convert `_id` (ObjectId) to string
+        user_id_list = [str(user["_id"]) for user in user_ids]
+
+        # Return the list of user IDs
+        return jsonify(user_id_list), 200
+    except Exception as e:
+        # Log and return the error
+        print("Error fetching user IDs:", str(e))
+        return jsonify({"error": str(e)}), 500
+
